@@ -9,28 +9,28 @@
       number: '01',
       title: 'Analisamos',
       description: 'Mapeamos toda a operação da sua clínica: tráfego, atendimento, conversão e faturamento.',
-      image: 'Diretrizes de Marca/website imagens/análisamos.png'
+      image: './Diretrizes de Marca/website Imagens/análisamos.png'
     },
     {
       id: 'estruturacao',
       number: '02',
       title: 'Estruturamos',
       description: 'Montamos o funil completo: anúncios, copy, scripts de WhatsApp e processos comerciais.',
-      image: 'Diretrizes de Marca/website imagens/estruturamos.png'
+      image: './Diretrizes de Marca/website Imagens/estruturamos.png'
     },
     {
       id: 'implementacao',
       number: '03',
       title: 'Implementamos',
       description: 'Colocamos tudo no ar e acompanhamos de perto os primeiros resultados para otimizar rápido.',
-      image: 'Diretrizes de Marca/website imagens/implementamos.png'
+      image: './Diretrizes de Marca/website Imagens/implementamos.png'
     },
     {
       id: 'escala',
       number: '04',
       title: 'Escalamos',
       description: 'Com o que funciona validado, escalamos o investimento e o faturamento de forma previsível e controlada.',
-      image: 'Diretrizes de Marca/website imagens/escala.png'
+      image: './Diretrizes de Marca/website Imagens/escala.png'
     }
   ];
 
