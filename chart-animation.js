@@ -1,6 +1,8 @@
 (function () {
 
   function setup() {
+    if (window.innerWidth < 768) return; // mobile: versão estática via HTML
+
     var col = document.getElementById('problema-chart-col');
     if (!col) return;
 
