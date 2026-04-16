@@ -314,7 +314,7 @@
     </svg>`;
 
   /* ─── Particles ──────────────────────────────────────────── */
-  const ptcls = Array.from({ length: 22 }, () => {
+  const ptcls = Array.from({ length: window.innerWidth < 768 ? 6 : 22 }, () => {
     const left = (Math.random() * 100).toFixed(1);
     const sz   = (1 + Math.random() * 2.5).toFixed(1);
     const dur  = (9 + Math.random() * 12).toFixed(1);

@@ -43,7 +43,7 @@
     // ── PARÂMETROS ──────────────────────────────────
     const COLOR          = '#7B2FBE';
     const TRAIL_OPACITY  = 0.10;
-    const PARTICLE_COUNT = 600;
+    const PARTICLE_COUNT = window.innerWidth < 768 ? 60 : 600;
     const SPEED          = 0.6;
     // ────────────────────────────────────────────────
 

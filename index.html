@@ -464,6 +464,12 @@
     @media (max-width: 768px) {
       .problema-layout { grid-template-columns: 1fr; }
       .problema-chart-col { min-height: 360px !important; }
+      .section-problema > .container { padding: 0 16px; width: 100%; }
+      .problema-texto-col { padding-left: 12px; padding-right: 12px; }
+      .problema-p-texto { padding-left: 0; }
+      .problema-corpo > .problema-p,
+      .problema-corpo > .problema-p strong,
+      .problema-reforco { max-width: 100% !important; }
     }
     .problema-texto-col {
       padding-left: 24px;
@@ -613,8 +619,23 @@
       margin: 0;
     }
     @media (max-width: 768px) {
-      .photo-card { flex: 0 0 300px; height: 400px; }
       .assessoria-title { margin-bottom: 36px; }
+      .photo-carousel-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        padding: 0 16px;
+        scrollbar-width: none;
+      }
+      .photo-carousel-wrapper::-webkit-scrollbar { display: none; }
+      .photo-carousel-track { padding-right: 16px; }
+      .photo-card {
+        flex: 0 0 82vw;
+        max-width: 320px;
+        height: 420px;
+        scroll-snap-align: start;
+        pointer-events: auto;
+      }
     }
 
     /* ── COMO FUNCIONA ── */
@@ -1012,6 +1033,20 @@
       .hero h1 { font-size: 28px; }
       .equipe-grid { grid-template-columns: 1fr; }
       .hero-badge { font-size: 0.72rem; padding: 6px 16px; }
+    }
+
+    /* ── Otimizações mobile: desabilitar animações pesadas ── */
+    @media (max-width: 768px) {
+      /* Canvas WebGL oculto no mobile (shader desativado via JS) */
+      #shader-bg { display: none; }
+      /* Diamante flutuante: sem loop contínuo */
+      .cta-diamond { animation: none !important; }
+      /* Pulso do CTA: simplificado */
+      .hero-cta-btn, .btn-cta { animation: none !important; }
+      /* Glow contínuo: desabilitado */
+      .hero-form-card { animation: none !important; }
+      /* will-change em elementos animados para GPU hint */
+      .reveal { will-change: opacity, transform; }
     }
   </style>
 
@@ -1429,8 +1464,8 @@
       const canvas = document.getElementById('particles-canvas');
       const ctx = canvas.getContext('2d');
       let particles = [];
-      const PARTICLE_COUNT = 80;
-      const CONNECTION_DIST = 120;
+      const PARTICLE_COUNT = window.innerWidth < 768 ? 20 : 80;
+      const CONNECTION_DIST = window.innerWidth < 768 ? 80 : 120;
       let w, h;
 
       function resize() {
@@ -1524,11 +1559,15 @@
 
     /* ═══════ CARROSSEL ═══════ */
     (function() {
-      const track = document.getElementById('carousel-track');
+      const track = document.getElementById('photo-carousel-track');
+      if (!track) return;
       const cards = track.children;
       const prevBtn = document.getElementById('carousel-prev');
       const nextBtn = document.getElementById('carousel-next');
       let pos = 0;
+
+      // No mobile, o scroll-snap nativo do CSS cuida da navegação
+      if (window.innerWidth < 768) return;
 
       function getCardWidth() {
         return cards[0].offsetWidth + 24; // gap
@@ -1540,10 +1579,10 @@
         pos = Math.max(0, Math.min(pos, getMaxPos()));
         track.style.transform = 'translateX(' + (-pos) + 'px)';
       }
-      prevBtn.addEventListener('click', () => { pos -= getCardWidth(); update(); });
-      nextBtn.addEventListener('click', () => { pos += getCardWidth(); update(); });
+      if (prevBtn) prevBtn.addEventListener('click', () => { pos -= getCardWidth(); update(); });
+      if (nextBtn) nextBtn.addEventListener('click', () => { pos += getCardWidth(); update(); });
 
-      // Drag
+      // Drag (desktop)
       let isDragging = false, startX, startPos;
       track.addEventListener('mousedown', e => {
         isDragging = true;
@@ -1560,19 +1599,6 @@
         isDragging = false;
         track.classList.remove('dragging');
       });
-
-      // Touch
-      track.addEventListener('touchstart', e => {
-        isDragging = true;
-        startX = e.touches[0].pageX;
-        startPos = pos;
-      }, { passive: true });
-      track.addEventListener('touchmove', e => {
-        if (!isDragging) return;
-        pos = startPos - (e.touches[0].pageX - startX);
-        update();
-      }, { passive: true });
-      track.addEventListener('touchend', () => { isDragging = false; });
 
       window.addEventListener('resize', update);
     })();

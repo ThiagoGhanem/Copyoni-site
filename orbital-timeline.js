@@ -432,21 +432,35 @@
 
     requestAnimationFrame(animate);
   }
-  animate();
 
-  // ── Auto-avanço com barra de progresso (cada ~4s) ─────────────────────────
-  setInterval(function () {
-    if (isRotating) return;
+  // ── Lazy init: só começa quando o container entra na tela ─────────────────
+  const isMobile = window.innerWidth < 768;
+  let animStarted = false;
 
-    nodeProgress = Math.min(100, nodeProgress + 100 / 80);
-    if (activeId) updateProgressBar();
+  function startTimeline() {
+    if (animStarted) return;
+    animStarted = true;
+    animate();
 
-    if (nodeProgress >= 100) {
-      nodeProgress = 0;
-      const currentIdx = activeId !== null ? data.findIndex(d => d.id === activeId) : -1;
-      const nextIdx    = (currentIdx + 1) % data.length;
-      toggleNode(data[nextIdx].id);
-    }
-  }, 50);
+    // ── Auto-avanço com barra de progresso (cada ~4s) ─────────────────────────
+    setInterval(function () {
+      if (isRotating) return;
+
+      nodeProgress = Math.min(100, nodeProgress + 100 / 80);
+      if (activeId) updateProgressBar();
+
+      if (nodeProgress >= 100) {
+        nodeProgress = 0;
+        const currentIdx = activeId !== null ? data.findIndex(d => d.id === activeId) : -1;
+        const nextIdx    = (currentIdx + 1) % data.length;
+        toggleNode(data[nextIdx].id);
+      }
+    }, isMobile ? 100 : 50);
+  }
+
+  const obsTimeline = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) startTimeline();
+  }, { threshold: 0.1 });
+  obsTimeline.observe(container);
 
 })();

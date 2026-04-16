@@ -1,4 +1,6 @@
 (function () {
+  if (window.innerWidth < 768) return; // sem WebGL no mobile
+
   const canvas = document.getElementById('shader-bg');
   if (!canvas) return;
 
